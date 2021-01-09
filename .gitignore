@@ -1,0 +1,6 @@
+.classpath
+.project
+iflytek-rtasr-websocket-client.iml
+.idea/
+.settings/
+target/
