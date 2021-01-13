@@ -30,8 +30,15 @@ public class AsrByteToMessageHandler extends ChannelDuplexHandler {
 		ctx.fireChannelRead( msg );
 	}
 
-	private static AsrResponse bean(ByteBuf buf ) throws Exception {
-		return Message2BeanUtil.bean( new String( Unpooled.copiedBuffer( buf ).array(), StandardCharsets.UTF_8 ),
-				AsrResponse.class );
+	private static AsrResponse bean( ByteBuf buf ) throws Exception {
+		try {
+			return Message2BeanUtil.bean( new String( Unpooled.copiedBuffer( buf ).array(), StandardCharsets.UTF_8 ),
+					AsrResponse.class );
+		}
+		finally {
+			if ( buf != null ) {
+				buf.release();
+			}
+		}
 	}
 }
