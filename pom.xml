@@ -6,9 +6,9 @@
     <groupId>com.yijianguanzhu.iflytek</groupId>
     <artifactId>iflytek-rtasr-websocket-client</artifactId>
     <name>${project.artifactId}</name>
-    <version>1.0</version>
+    <version>1.1</version>
     <description>科大讯飞实时语音转写ASR 基于Netty的WebSocket Client SDK</description>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/yijianguanzhu/iflytek-rtasr-websocket-client</url>
 
     <licenses>
         <license>

@@ -1,7 +1,7 @@
 package com.yijianguanzhu.iflytek.rtasr.config;
 
 /**
- * 默认使用 {@link com.yedan8.xfyun.websocket.model.DefaultNettyConfiguration}
+ * 默认使用 {@link com.yijianguanzhu.iflytek.rtasr.model.DefaultNettyConfiguration}
  */
 
 import io.netty.bootstrap.Bootstrap;
