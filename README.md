@@ -50,6 +50,27 @@
 
 	<dependency>
 		<groupId>com.yijianguanzhu.iflytek</groupId>
-	    <artifactId>iflytek-rtasr-websocket-client</artifactId>
-		<version>1.1</version>
+		<artifactId>iflytek-rtasr-websocket-client</artifactId>
+		<version>1.2</version>
 	</dependency>
+
+## 边录音边识别用法
+在自己工程中引入依赖后，只需要在自己代码中编写如下代码即可，然后根据提示操作。之后你便可以边说话边识别
+
+	import com.yijianguanzhu.iflytek.rtasr.Main;
+	/**
+	 * @author yijianguanzhu 2021年01月09日
+	 * @since 1.8
+	 */
+	public class AsrTest {
+		public static void main( String[] args ) {
+			Main.appId = "你的appId";
+			Main.apiKey = "你的apiKey";
+			Main.main( args );
+		}
+	}
+
+## 注意事项
+
+1. 本项目直接在idea上运行会报slf4j组件依赖错误问题，无法直接运行，将本项目依赖到自己的spring项目中，试运行就不会出问题了。
+2. 本项目直接在eclipse上运行不会报错，因为项目开发时是在eclipse上的。

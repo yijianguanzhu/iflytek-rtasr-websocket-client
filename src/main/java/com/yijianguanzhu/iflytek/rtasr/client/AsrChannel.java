@@ -8,6 +8,7 @@ import com.yijianguanzhu.iflytek.rtasr.model.FinishLatchImpl;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelPipeline;
+import lombok.Setter;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +30,10 @@ public class AsrChannel implements FinishLatch {
 	private Consumer<AsrException> error;
 	private Consumer<AsrResponse> message;
 	private ExecutorService executorService;
-	private ByteBuffer buf;
+	private volatile ByteBuffer buf;
+	// 缓存大小，默认4KB
+	@Setter
+	private int capacity = 4 * 1024;
 	@Delegate(types = FinishLatch.class)
 	private FinishLatchImpl finishLatch;
 	private CountDownLatch latch = new CountDownLatch( 1 );
@@ -49,15 +53,16 @@ public class AsrChannel implements FinishLatch {
 		// 数据缓存不保证并发，正常都会以一定的数据量发送数据流，因此生产理论不存在并发可能性。
 		if ( channel == null ) {
 			if ( buf == null ) {
-				buf = ByteBuffer.wrap( data );
+				buf = ByteBuffer.allocate( capacity );
+				buf.put( data );
 			}
 			else {
-				merge( data );
+				buf.put( data );
 			}
 		}
 		else if ( channel != null && channel.isOpen() ) {
 			if ( buf != null ) {
-				merge( data );
+				buf.put( data );
 				channel.writeAndFlush( buf.array() );
 				buf = null;
 			}
@@ -143,14 +148,11 @@ public class AsrChannel implements FinishLatch {
 			}
 			// 连接失败
 			if ( this.error != null ) {
+				log.debug( "连接已关闭" );
+				finishLatch.countDown();
 				this.error.accept( new AsrException( connectFuture.cause() ) );
 			}
 		} );
-	}
-
-	private void merge( byte[] data ) {
-		ByteBuffer wrap = ByteBuffer.wrap( data );
-		buf.put( wrap );
 	}
 
 	private AsrMessageDispatchHandler getAsrMsgHandler() {
